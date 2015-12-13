@@ -5,23 +5,23 @@ void handleKeyPress(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'w':
 		case 'W':
-			player.goB = false;
-			player.goF = true;
+			player->goB = false;
+			player->goF = true;
 			break;
 		case 's':
 		case 'S':
-			player.goF = false;
-			player.goB = true;
+			player->goF = false;
+			player->goB = true;
 			break;
 		case 'a':
 		case 'A':
-			player.goR = false;
-			player.goL = true;
+			player->goR = false;
+			player->goL = true;
 			break;
 		case 'd':
 		case 'D':
-			player.goL = false;
-			player.goR = true;
+			player->goL = false;
+			player->goR = true;
 			break;
 		case 'm':
 //			glutTimerFunc(0, update, 0);
@@ -36,19 +36,19 @@ void handleKeyRelease(unsigned char key, int x, int y) {
 	switch (key) {
 		case 'w':
 		case 'W':
-			player.goF = false;
+			player->goF = false;
 			break;
 		case 's':
 		case 'S':
-			player.goB = false;
+			player->goB = false;
 			break;
 		case 'a':
 		case 'A':
-			player.goL = false;
+			player->goL = false;
 			break;
 		case 'd':
 		case 'D':
-			player.goR = false;
+			player->goR = false;
 			break;
 	}
 }
@@ -57,20 +57,20 @@ void handleKeyRelease(unsigned char key, int x, int y) {
 void handleSpecialPress(int key, int x, int y) {
 	switch (key) {
 		case GLUT_KEY_UP:
-			player.turnD = false;
-			player.turnU = true;
+			player->turnD = false;
+			player->turnU = true;
 			break;
 		case GLUT_KEY_DOWN:
-			player.turnU = false;
-			player.turnD = true;
+			player->turnU = false;
+			player->turnD = true;
 			break;
 		case GLUT_KEY_LEFT:
-			player.turnR = false;
-			player.turnL = true;
+			player->turnR = false;
+			player->turnL = true;
 			break;
 		case GLUT_KEY_RIGHT:
-			player.turnL = false;
-			player.turnR = true;
+			player->turnL = false;
+			player->turnR = true;
 			break;
 	}
 }
@@ -79,16 +79,16 @@ void handleSpecialPress(int key, int x, int y) {
 void handleSpecialRelease(int key, int x, int y) {
 	switch (key) {
 		case GLUT_KEY_UP:
-			player.turnU = false;
+			player->turnU = false;
 			break;
 		case GLUT_KEY_DOWN:
-			player.turnD = false;
+			player->turnD = false;
 			break;
 		case GLUT_KEY_LEFT:
-			player.turnL = false;
+			player->turnL = false;
 			break;
 		case GLUT_KEY_RIGHT:
-			player.turnR = false;
+			player->turnR = false;
 			break;
 	}
 }

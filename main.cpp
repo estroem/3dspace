@@ -22,7 +22,6 @@ Most of the initial code was written in late August/early September of 2012. -- 
 #include "object.h"
 #include "globals.cpp"
 #include "deathlord.h"
-#include "updateplayerlocation.h"
 
 using namespace std;
 
@@ -35,7 +34,7 @@ vector<Wall *> walls;
 vector<Floor *> floors;
 vector<Object *> objects;
 vector<Character *> characters;
-Deathlord player;
+Character *player;
 
 //Initializes 3D rendering
 void initRendering() {
@@ -50,10 +49,6 @@ void handleResize(int w, int h) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(45.0, (double)w / (double)h, 0.4, 200.0);
-}
-
-void updatePlayer() {
-	updatePlayerLocation(&player);
 }
 
 // Updates the position of all the objects
@@ -119,9 +114,9 @@ void drawScene() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
-	glRotatef(player.angleV, 1.0f, 0.0f, 0.0f); //Rotate the camera
-	glRotatef(player.angleH, 0.0f, 1.0f, 0.0f); //Rotate the camera
-	glTranslatef(-player.pos.x, -player.pos.y, -player.pos.z); //Move
+	glRotatef(player->angleV, 1.0f, 0.0f, 0.0f); //Rotate the camera
+	glRotatef(player->angleH, 0.0f, 1.0f, 0.0f); //Rotate the camera
+	glTranslatef(-player->pos.x, -player->pos.y, -player->pos.z); //Move
 	
 	drawWalls();
 	drawFloors();
@@ -132,7 +127,6 @@ void drawScene() {
 }
 
 void update(int value) {
-	updatePlayer();
 	updateObjects();
 	updateCharacters();
     
@@ -159,6 +153,10 @@ int main(int argc, char** argv) {
 	glutKeyboardUpFunc(handleKeyRelease);
 	glutSpecialFunc(handleSpecialPress);
 	glutSpecialUpFunc(handleSpecialRelease);
+	
+	player = new Deathlord;
+	player->movingSpeed = 0.4;
+	characters.push_back(player);
 
 	Deathlord bob(0, 0, 0);
 	bob.loadFromFile("table.dat");

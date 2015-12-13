@@ -15,6 +15,8 @@ using namespace std;
 class Character : public DrawableObject {
 private:
 	static int nextId;
+protected:
+	void updatePlayerLocation();
 public:
 	int id;
 	MathVector pos;
@@ -37,7 +39,7 @@ public:
 		pos.y = 0;
 		pos.z = 0;
 		goF = goB = goL = goR = false;
-		turnU, turnD, turnL, turnR = false;
+		turnU = turnD = turnL = turnR = false;
 
 		this->id = Character::nextId++;
 	}
@@ -47,7 +49,7 @@ public:
 		pos.y = posY;
 		pos.z = posZ;
 		goF = goB = goL = goR = false;
-		turnU, turnD, turnL, turnR = false;
+		turnU = turnD = turnL = turnR = false;
 
 		this->id = Character::nextId++;
 	}
