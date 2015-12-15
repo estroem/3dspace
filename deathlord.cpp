@@ -17,5 +17,5 @@ void Deathlord::update() {
 }
 
 void Deathlord::draw() {
-	Character::draw();
+	DrawableObject::draw();
 }

@@ -40,6 +40,10 @@ MathVector MathVector::operator* (MathVector v) { // Cross product
 	return result;
 }
 
+float MathVector::dotProduct(MathVector v) {
+	return x * v.x + y * v.y + z * v.z;
+}
+
 MathVector MathVector::operator* (float t) {
 	MathVector result;
 	result.x = this->x * t;

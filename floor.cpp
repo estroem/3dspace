@@ -21,3 +21,12 @@ void Floor::setColor(float red, float green, float blue) {
 	this->colorG = green;
 	this->colorB = blue;
 }
+
+MathPlane Floor::getPlane() {
+	MathPlane plane(corner1, corner2, corner3);
+	return plane;
+}
+
+float Floor::getHeightAt(float x, float z) {
+	return getPlane().getYAt(x, z);
+}

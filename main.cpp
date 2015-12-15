@@ -14,6 +14,7 @@ Most of the initial code was written in late August/early September of 2012. -- 
 
 #include "keypress.h"
 #include "mathvector.h"
+#include "mathplane.h"
 #include "point.h"
 #include "box.h"
 #include "wall.h"
@@ -117,7 +118,7 @@ void drawScene() {
 	glRotatef(player->angleV, 1.0f, 0.0f, 0.0f); //Rotate the camera
 	glRotatef(player->angleH, 0.0f, 1.0f, 0.0f); //Rotate the camera
 	glTranslatef(-player->pos.x, -player->pos.y, -player->pos.z); //Move
-	
+
 	drawWalls();
 	drawFloors();
 	drawObjects();

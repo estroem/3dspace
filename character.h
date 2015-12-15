@@ -17,10 +17,8 @@ private:
 	static int nextId;
 protected:
 	void updatePlayerLocation();
-	bool snapToFloor();
 public:
 	int id;
-	MathVector pos;
 	float posX;
 	float posY;
 	float posZ;
@@ -28,12 +26,8 @@ public:
 	float angleV;
 	float turningSpeed;
 	float movingSpeed;
-	float maxRadius;
-	int numberOfBoxes;
-	int numberOfTriangles;
 	bool goF, goB, goL, goR;
 	bool turnU, turnD, turnL, turnR;
-	vector<MathVector> model;
 
 	Character() : posX(0), posY(0), posZ(0), angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4) {
 		pos.x = 0;
@@ -55,7 +49,6 @@ public:
 		this->id = Character::nextId++;
 	}
 
-	bool loadFromFile(char* filename);
 	virtual void update() = 0;
 	virtual void draw() = 0;
 };
