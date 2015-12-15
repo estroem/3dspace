@@ -1,8 +1,6 @@
 #ifndef __GLOBALS_CPP__
 #define __GLOBALS_CPP__
 
-#define WALL_MARGIN 0.4
-
 #include <vector>
 #include "wall.h"
 #include "floor.h"

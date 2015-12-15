@@ -17,6 +17,7 @@ private:
 	static int nextId;
 protected:
 	void updatePlayerLocation();
+	bool snapToFloor();
 public:
 	int id;
 	MathVector pos;
@@ -44,10 +45,10 @@ public:
 		this->id = Character::nextId++;
 	}
 
-	Character(float posX, float posY, float posZ) : angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4) {
-		pos.x = posX;
-		pos.y = posY;
-		pos.z = posZ;
+	Character(float x, float y, float z) : angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4) {
+		pos.x = x;
+		pos.y = y;
+		pos.z = z;
 		goF = goB = goL = goR = false;
 		turnU = turnD = turnL = turnR = false;
 

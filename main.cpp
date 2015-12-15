@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 	glutSpecialUpFunc(handleSpecialRelease);
 	
 	player = new Deathlord;
-	player->movingSpeed = 0.4;
+	player->movingSpeed = 0.1;
 	characters.push_back(player);
 
 	Deathlord bob(0, 0, 0);

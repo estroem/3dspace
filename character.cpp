@@ -1,8 +1,11 @@
 #include "character.h"
 #include "globals.cpp"
 
+#define WALL_MARGIN 1
+
 int Character::nextId = 0;
 
+// code for updating location for a player controlled by the keyboard
 void Character::updatePlayerLocation() {
 	if(this->turnL)
 		this->angleH -= this->turningSpeed;
@@ -87,6 +90,12 @@ void Character::updatePlayerLocation() {
 		this->angleV += 360;
 }
 
+// fix y position to snap to floor
+bool Character::snapToFloor() {
+	return true;
+}
+
+// draw the character
 void Character::draw() {
 	glPushMatrix();
 	glTranslatef(this->pos.x, this->pos.y, this->pos.z);
