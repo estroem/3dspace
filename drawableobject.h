@@ -17,15 +17,14 @@ protected:
 	float maxRadius;
 	int numberOfBoxes;
 	int numberOfTriangles;
-	float ySpeed;
+	MathVector speed;
 
 	bool snapToFloor();
-	void updatePhysics();
 public:
 	MathVector pos;
 	Floor *floor;
 
-	DrawableObject() : floor(0), ySpeed(0), eyePos() {}
+	DrawableObject() : floor(0), eyePos() {}
 	MathVector getAbsEyePos();
 	void setEyePos(MathVector pos);
 	bool loadFromFile(char* filename);

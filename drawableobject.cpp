@@ -8,10 +8,6 @@
 #include "box.h"
 #include "floor.h"
 
-#define STEP 0.5
-#define EPS 0.0001
-#define GRAVITY 0.02
-
 using namespace std;
 
 MathVector DrawableObject::getLowestPoint() {
@@ -57,7 +53,7 @@ bool DrawableObject::snapToFloor() {
 	}
 	
 	pos.y = height - model[minPointIndex].y;
-	ySpeed = 0;
+	speed.y = 0;
 
 	return true;
 }
@@ -97,56 +93,6 @@ void DrawableObject::updatePhysics() {
 }
 
 */
-void DrawableObject::updatePhysics() {
-	if(!floor) { // not on the floor
-		ySpeed -= GRAVITY;
-		MathVector ySpeedVector(0, ySpeed, 0);
-
-		for(unsigned int i = 0; i < floors.size(); ++i) {
-			if(floors[i]->getPlane().lineCrosses(pos, ySpeedVector)) {
-				floor = floors[i];
-				snapToFloor();
-				return;
-			}
-		}
-
-		// not hitting a floor
-		pos = pos + ySpeedVector;
-	} else {
-		float floorY;
-		if(floor->getYAt(&floorY, pos.x, pos.z) ) {
-			snapToFloor();
-		}
-
-		else {
-			unsigned int possibleFloor = 0;
-			float possibleFloorY = 0;
-			bool found = false;
-
-			for(unsigned int i = 0; i < floors.size(); ++i) {
-				float otherFloorY;
-				if(floors[i]->getYAt(&otherFloorY, pos.x, pos.z) &&
-						((otherFloorY == floorY) || (otherFloorY - floorY > 0 && fabs(otherFloorY - floorY) < STEP) || (otherFloorY - floorY >= -EPS))) {
-					if(!found || otherFloorY > possibleFloorY) {
-						found = true;
-						possibleFloor = i;
-						possibleFloorY = otherFloorY;
-					}
-				}
-			}
-
-			if(found) {
-				floor = floors[possibleFloor];
-				snapToFloor();
-				return;
-			}
-
-			else {
-				floor = 0;
-			}
-		}
-	}
-}
 
 // return absolute position of eyes
 MathVector DrawableObject::getAbsEyePos() {

@@ -3,6 +3,9 @@
 
 #define WALL_MARGIN 1
 #define JUMP_SPEED 2
+#define STEP 0.5
+#define EPS 0.0001
+#define GRAVITY 0.02
 
 int Character::nextId = 0;
 
@@ -39,8 +42,6 @@ void Character::updatePlayerLocation() {
 		next.z += this->movingSpeed * sin(this->angleH*3.14159/180);
 	}
 	
-	this->pos = next;
-	
 	bool collisionX = false;
 	bool collisionZ = false;
 	float collisionPointX = 0;
@@ -48,23 +49,23 @@ void Character::updatePlayerLocation() {
 
 	int size = walls.size();
 	for(int i=0; i<size; ++i) {
-		if(this->pos.z > min(walls[i]->startZ, walls[i]->endZ) && this->pos.z < max(walls[i]->startZ, walls[i]->endZ)) {
-			if(this->pos.x > walls[i]->startX != next.x + WALL_MARGIN > walls[i]->startX) {
+		if(next.z > min(walls[i]->startZ, walls[i]->endZ) && next.z < max(walls[i]->startZ, walls[i]->endZ)) {
+			if(next.x > walls[i]->startX != next.x + WALL_MARGIN > walls[i]->startX) {
 				collisionX = true;
 				collisionPointX = walls[i]->startX - WALL_MARGIN;
 			}
-			if(this->pos.x < walls[i]->startX != next.x - WALL_MARGIN < walls[i]->startX) {
+			if(next.x < walls[i]->startX != next.x - WALL_MARGIN < walls[i]->startX) {
 				collisionX = true;
 				collisionPointX = walls[i]->startX + WALL_MARGIN;
 			}
 		}
 
-		if(this->pos.x > min(walls[i]->startX, walls[i]->endX) && this->pos.x < max(walls[i]->startX, walls[i]->endX)) {
-			if(this->pos.z > walls[i]->startZ != next.z + WALL_MARGIN > walls[i]->startZ) {
+		if(next.x > min(walls[i]->startX, walls[i]->endX) && next.x < max(walls[i]->startX, walls[i]->endX)) {
+			if(next.z > walls[i]->startZ != next.z + WALL_MARGIN > walls[i]->startZ) {
 				collisionZ = true;
 				collisionPointZ = walls[i]->startZ - WALL_MARGIN;
 			}
-			if(this->pos.z > walls[i]->startZ != next.z - WALL_MARGIN > walls[i]->startZ) {
+			if(next.z > walls[i]->startZ != next.z - WALL_MARGIN > walls[i]->startZ) {
 				collisionZ = true;
 				collisionPointZ = walls[i]->startZ + WALL_MARGIN;
 			}
@@ -72,13 +73,9 @@ void Character::updatePlayerLocation() {
 	}
 	
 	if(collisionX)
-		this->pos.x = collisionPointX;
-	else
-		this->pos.x = next.x;
+		next.x = collisionPointX;
 	if(collisionZ)
-		this->pos.z = collisionPointZ;
-	else
-		this->pos.z = next.z;
+		next.z = collisionPointZ;
 	
     if(this->angleH > 360)
         this->angleH -= 360;
@@ -89,13 +86,64 @@ void Character::updatePlayerLocation() {
         this->angleV -= 360;
 	if(this->angleV < 0)
 		this->angleV += 360;
+	
+	if(!floor) { // not on the floor
+		speed.y -= GRAVITY;
 
-	DrawableObject::updatePhysics();
+		for(unsigned int i = 0; i < floors.size(); ++i) {
+			if(floors[i]->getPlane().lineCrosses(next, speed)) {
+				floor = floors[i];
+				pos = next;
+				snapToFloor();
+				return;
+			}
+		}
+
+		// not hitting a floor
+		pos = next + speed;
+	}
+	
+	else {
+		float floorY;
+		bool onCurrent = floor->getYAt(&floorY, next.x, next.z);
+
+		unsigned int possibleFloor = 0;
+		float possibleFloorY = 0;
+		bool found = false;
+
+		for(unsigned int i = 0; i < floors.size(); ++i) {
+			float otherFloorY;
+			if(floors[i]->getYAt(&otherFloorY, next.x, next.z) &&
+					((otherFloorY == floorY) || (otherFloorY - floorY > 0 && fabs(otherFloorY - floorY) < STEP) || (otherFloorY - floorY >= -EPS))) {
+				if(!found || otherFloorY > possibleFloorY) {
+					found = true;
+					possibleFloor = i;
+					possibleFloorY = otherFloorY;
+				}
+			}
+		}
+
+		if(found) {
+			floor = floors[possibleFloor];
+			pos = next;
+			snapToFloor();
+			return;
+		}
+
+		else {
+			if(onCurrent) {
+				pos = next;
+				snapToFloor();
+			} else {
+				floor = 0;
+			}
+		}
+	}
 }
 
 void Character::jump() {
 	if(floor) {
 		floor = 0;
-		ySpeed = JUMP_SPEED;
+		speed.y = JUMP_SPEED;
 	}
 }
