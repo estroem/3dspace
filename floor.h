@@ -31,6 +31,7 @@ public:
 	void draw();
 	void setColor(float red, float green, float blue);
 	MathPlane getPlane();
+	bool lineCrosses(MathVector start, MathVector dir);
 	bool getYAt(float *y, float x, float z);
 };
 

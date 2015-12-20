@@ -5,7 +5,7 @@
 #define JUMP_SPEED 2
 #define STEP 0.5
 #define EPS 0.0001
-#define GRAVITY 0.02
+#define GRAVITY 0.01
 
 int Character::nextId = 0;
 
@@ -87,11 +87,13 @@ void Character::updatePlayerLocation() {
 	if(this->angleV < 0)
 		this->angleV += 360;
 	
+	//printf("floor %d\n", floor ? floor->id : -1);
+
 	if(!floor) { // not on the floor
 		speed.y -= GRAVITY;
-
+		puts("!floor");
 		for(unsigned int i = 0; i < floors.size(); ++i) {
-			if(floors[i]->getPlane().lineCrosses(next, speed)) {
+			if(floors[i]->lineCrosses(pos, speed + next)) {printf("linecross %d", i);
 				floor = floors[i];
 				pos = next;
 				snapToFloor();
@@ -107,19 +109,21 @@ void Character::updatePlayerLocation() {
 		float floorY;
 		bool onCurrent = floor->getYAt(&floorY, next.x, next.z);
 
+		MathVector lowestPoint = pos + getLowestPoint();
+
 		unsigned int possibleFloor = 0;
 		float possibleFloorY = 0;
 		bool found = false;
 
 		for(unsigned int i = 0; i < floors.size(); ++i) {
 			float otherFloorY;
-			if(floors[i]->getYAt(&otherFloorY, next.x, next.z) &&
-					((otherFloorY == floorY) || (otherFloorY - floorY > 0 && fabs(otherFloorY - floorY) < STEP) || (otherFloorY - floorY >= -EPS))) {
-				if(!found || otherFloorY > possibleFloorY) {
-					found = true;
-					possibleFloor = i;
-					possibleFloorY = otherFloorY;
-				}
+			if(floors[i]->getYAt(&otherFloorY, next.x, next.z)
+					&& ((otherFloorY == floorY) || (otherFloorY - lowestPoint.y > 0 && fabs(otherFloorY - lowestPoint.y) < STEP)
+												|| (otherFloorY - lowestPoint.y < 0 && otherFloorY - lowestPoint.y >= -EPS))
+					&& (!found || otherFloorY > possibleFloorY)) {
+				found = true;
+				possibleFloor = i;
+				possibleFloorY = otherFloorY;
 			}
 		}
 

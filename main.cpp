@@ -230,6 +230,22 @@ int main(int argc, char** argv) {
 	floor3.setColor(0.0f, 1.0f, 0.0f);
 	floors.push_back(&floor3);
 
+	Floor floor4;
+	floor4.corner1.setValues(-25.0f, -0.0f, -5.0f);
+	floor4.corner2.setValues(-20.0f, -0.0f, -5.0f);
+	floor4.corner3.setValues(-20.0f, -5.0f, 0.0f);
+	floor4.corner4.setValues(-25.0f, -5.0f, 0.0f);
+	floor4.setColor(0.0f, 0.0f, 1.0f);
+	floors.push_back(&floor4);
+
+	Floor floor5;
+	floor5.corner1.setValues(-25.0f, -0.0f, -10.0f);
+	floor5.corner2.setValues(-20.0f, -0.0f, -10.0f);
+	floor5.corner3.setValues(-20.0f, -0.0f, -5.0f);
+	floor5.corner4.setValues(-25.0f, -0.0f, -5.0f);
+	floor5.setColor(0.0f, 0.0f, 1.0f);
+	floors.push_back(&floor5);
+
 	player->floor = &floor;
 
 	float y;

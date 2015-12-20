@@ -10,8 +10,6 @@ using namespace std;
 class DrawableObject {
 private:
 	MathVector eyePos;
-	MathVector getLowestPoint();
-	MathVector getHighestPoint();
 protected:
 	vector<MathVector> model;
 	float maxRadius;
@@ -26,6 +24,8 @@ public:
 
 	DrawableObject() : floor(0), eyePos() {}
 	MathVector getAbsEyePos();
+	MathVector getLowestPoint();
+	MathVector getHighestPoint();
 	void setEyePos(MathVector pos);
 	bool loadFromFile(char* filename);
 	virtual void draw() = 0;

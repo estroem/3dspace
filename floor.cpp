@@ -28,6 +28,13 @@ MathPlane Floor::getPlane() {
 	return plane;
 }
 
+bool Floor::lineCrosses(MathVector start, MathVector dir) {
+	Triangle t1(corner1, corner2, corner3);
+	Triangle t2(corner1, corner4, corner3);
+
+	return (t1.lineCrosses(start, dir) || t2.lineCrosses(start, dir));
+}
+
 // returns false if x and z are outside floor tile or floor is somehow vertical
 bool Floor::getYAt(float *y, float x, float z) {
 	Triangle t1(corner1, corner2, corner3);

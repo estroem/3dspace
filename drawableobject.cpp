@@ -11,8 +11,7 @@
 using namespace std;
 
 MathVector DrawableObject::getLowestPoint() {
-	MathVector zero;
-	if(model.size() == 0) return zero;
+	if(model.size() == 0) return MathVector(0, 0, 0);
 
 	unsigned int minPointIndex = 0; // do this when loading model instead
 	for(unsigned int i = 1; i < model.size(); ++i) {
