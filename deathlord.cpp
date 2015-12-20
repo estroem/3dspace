@@ -14,6 +14,7 @@ void Deathlord::update() {
 		else if(this->pos.x <= -1)
 			this->cycle = true;
 	}
+
 }
 
 void Deathlord::draw() {

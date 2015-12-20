@@ -31,7 +31,7 @@ public:
 	void draw();
 	void setColor(float red, float green, float blue);
 	MathPlane getPlane();
-	float getHeightAt(float x, float z);
+	bool getYAt(float *y, float x, float z);
 };
 
 #endif

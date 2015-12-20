@@ -23,6 +23,9 @@ void handleKeyPress(unsigned char key, int x, int y) {
 			player->goL = false;
 			player->goR = true;
 			break;
+		case ' ':
+	//		player->jump();
+			break;
 		case 'm':
 //			glutTimerFunc(0, update, 0);
 			break;

@@ -1,32 +1,160 @@
 #include <fstream>
 #include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
+#include "globals.cpp"
 #include "drawableobject.h"
 #include "box.h"
+#include "floor.h"
+
+#define STEP 0.5
+#define EPS 0.0001
+#define GRAVITY 0.02
 
 using namespace std;
+
+MathVector DrawableObject::getLowestPoint() {
+	MathVector zero;
+	if(model.size() == 0) return zero;
+
+	unsigned int minPointIndex = 0; // do this when loading model instead
+	for(unsigned int i = 1; i < model.size(); ++i) {
+		if(model[i].y < model[minPointIndex].y) minPointIndex = i;
+	}
+
+	return model[minPointIndex];
+}
+
+MathVector DrawableObject::getHighestPoint() {
+	MathVector p;
+	return p;
+}
 
 // fix y position to snap to floor
 bool DrawableObject::snapToFloor() {
 	if(!floor) return false;
 	
 	if(model.size() == 0) {
-		pos.y = 0;
+		float height;
+		if(!floor->getYAt(&height, pos.x, pos.z)) {
+			return false; // floor is vertical???
+		}
+
+		pos.y = height;
 		return true;
 	}
 
-	unsigned int minPointIndex = 0;
+	unsigned int minPointIndex = 0; // do this when loading model instead
 	for(unsigned int i = 1; i < model.size(); ++i) {
 		if(model[i].y < model[minPointIndex].y) minPointIndex = i;
 	}
 
-	float height = floor->getHeightAt(model[minPointIndex].x, model[minPointIndex].z);
+	float height;
 	
+	if(!floor->getYAt(&height, model[minPointIndex].x, model[minPointIndex].z)) {
+		return false; // floor is vertical???
+	}
+	
+	pos.y = height - model[minPointIndex].y;
+	ySpeed = 0;
+
 	return true;
 }
-
+/*
 void DrawableObject::updatePhysics() {
-	snapToFloor();
+	MathVector ySpeedVector(0, ySpeed, 0);
+
+	MathVector lowestPoint = getLowestPoint();
+
+	if(ySpeed == 0) { // maybe not compare floats like this?
+
+		unsigned int possibleFloor = 0;
+		float possibleFloorY = 0;
+		bool found = false;
+
+		for(unsigned int i = 0; i < floors.size(); ++i) {
+			float floorY;
+			if(floors[i]->getYAt(&floorY, pos.x, pos.z) &&
+					((floorY == lowestPoint.y) || (floorY - lowestPoint.y > 0 && fabs(floorY - lowestPoint.y) < STEP) || (floorY - lowestPoint.y >= -EPS))) {
+				if(!found || floorY > possibleFloorY) {
+					found = true;
+					possibleFloor = i;
+					possibleFloorY = floorY;
+				}
+			}
+		}
+	}
+
+	else if(ySpeed < 0) {
+		
+	}
+
+	else {
+	
+	}
+
+}
+
+*/
+void DrawableObject::updatePhysics() {
+	if(!floor) { // not on the floor
+		ySpeed -= GRAVITY;
+		MathVector ySpeedVector(0, ySpeed, 0);
+
+		for(unsigned int i = 0; i < floors.size(); ++i) {
+			if(floors[i]->getPlane().lineCrosses(pos, ySpeedVector)) {
+				floor = floors[i];
+				snapToFloor();
+				return;
+			}
+		}
+
+		// not hitting a floor
+		pos = pos + ySpeedVector;
+	} else {
+		float floorY;
+		if(floor->getYAt(&floorY, pos.x, pos.z) ) {
+			snapToFloor();
+		}
+
+		else {
+			unsigned int possibleFloor = 0;
+			float possibleFloorY = 0;
+			bool found = false;
+
+			for(unsigned int i = 0; i < floors.size(); ++i) {
+				float otherFloorY;
+				if(floors[i]->getYAt(&otherFloorY, pos.x, pos.z) &&
+						((otherFloorY == floorY) || (otherFloorY - floorY > 0 && fabs(otherFloorY - floorY) < STEP) || (otherFloorY - floorY >= -EPS))) {
+					if(!found || otherFloorY > possibleFloorY) {
+						found = true;
+						possibleFloor = i;
+						possibleFloorY = otherFloorY;
+					}
+				}
+			}
+
+			if(found) {
+				floor = floors[possibleFloor];
+				snapToFloor();
+				return;
+			}
+
+			else {
+				floor = 0;
+			}
+		}
+	}
+}
+
+// return absolute position of eyes
+MathVector DrawableObject::getAbsEyePos() {
+	return pos + eyePos;
+}
+
+void DrawableObject::setEyePos(MathVector pos) {
+	eyePos = pos;
 }
 
 // draw the character
@@ -85,7 +213,7 @@ bool DrawableObject::loadFromFile(char* filename) {
 	indata.read(reinterpret_cast<char*>(&this->numberOfTriangles), 4);
 
 	// Read box model
-	for(unsigned int i=0; i<numberOfBoxes; ++i) {
+	for(int i=0; i<numberOfBoxes; ++i) {
 		short right, left, top, bottom, front, back;
 		indata.read(reinterpret_cast<char*>(&right), 2);
 		indata.read(reinterpret_cast<char*>(&left), 2);

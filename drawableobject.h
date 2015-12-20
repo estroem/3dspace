@@ -9,20 +9,25 @@ using namespace std;
 
 class DrawableObject {
 private:
-	Floor *floor;
 	MathVector eyePos;
+	MathVector getLowestPoint();
+	MathVector getHighestPoint();
 protected:
 	vector<MathVector> model;
 	float maxRadius;
 	int numberOfBoxes;
 	int numberOfTriangles;
+	float ySpeed;
 
 	bool snapToFloor();
 	void updatePhysics();
 public:
 	MathVector pos;
+	Floor *floor;
 
-	DrawableObject() {}
+	DrawableObject() : floor(0), ySpeed(0), eyePos() {}
+	MathVector getAbsEyePos();
+	void setEyePos(MathVector pos);
 	bool loadFromFile(char* filename);
 	virtual void draw() = 0;
 };

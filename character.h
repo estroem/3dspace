@@ -49,6 +49,8 @@ public:
 		this->id = Character::nextId++;
 	}
 
+	void jump();
+
 	virtual void update() = 0;
 	virtual void draw() = 0;
 };

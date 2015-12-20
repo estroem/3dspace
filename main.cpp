@@ -15,6 +15,7 @@ Most of the initial code was written in late August/early September of 2012. -- 
 #include "keypress.h"
 #include "mathvector.h"
 #include "mathplane.h"
+#include "triangle.h"
 #include "point.h"
 #include "box.h"
 #include "wall.h"
@@ -117,7 +118,9 @@ void drawScene() {
 	
 	glRotatef(player->angleV, 1.0f, 0.0f, 0.0f); //Rotate the camera
 	glRotatef(player->angleH, 0.0f, 1.0f, 0.0f); //Rotate the camera
-	glTranslatef(-player->pos.x, -player->pos.y, -player->pos.z); //Move
+
+	MathVector pos = player->getAbsEyePos();
+	glTranslatef(-pos.x, -pos.y, -pos.z); //Move
 
 	drawWalls();
 	drawFloors();
@@ -156,6 +159,10 @@ int main(int argc, char** argv) {
 	glutSpecialUpFunc(handleSpecialRelease);
 	
 	player = new Deathlord;
+	player->pos.x = player->pos.z = 0;
+	player->pos.y = -5;
+	MathVector eye(0, 5, 0);
+	player->setEyePos(eye);
 	player->movingSpeed = 0.1;
 	characters.push_back(player);
 
@@ -207,6 +214,56 @@ int main(int argc, char** argv) {
 	floor.setColor(0.7f, 0.7f, 0.7f);
 	floors.push_back(&floor);
 
+	Floor floor2;
+	floor2.corner1.setValues(-25.0f, -4.6f, -25.0f);
+	floor2.corner2.setValues(-20.0f, -4.6f, -25.0f);
+	floor2.corner3.setValues(-20.0f, -4.6f, -20.0f);
+	floor2.corner4.setValues(-25.0f, -4.6f, -20.0f);
+	floor2.setColor(1.0f, 0.0f, 0.0f);
+	floors.push_back(&floor2);
+
+	Floor floor3;
+	floor3.corner1.setValues(-25.0f, -4.2f, -25.0f);
+	floor3.corner2.setValues(-22.0f, -4.2f, -25.0f);
+	floor3.corner3.setValues(-22.0f, -4.2f, -22.0f);
+	floor3.corner4.setValues(-25.0f, -4.2f, -22.0f);
+	floor3.setColor(0.0f, 1.0f, 0.0f);
+	floors.push_back(&floor3);
+
+	player->floor = &floor;
+
+	float y;
+	//puts(floor.getYAt(&y, -2.2, 0) ? "true" : "false");
+
+	vector<MathVector> fail;
+	/*
+	for(unsigned int i = 0; i < 1000000; ++i) {
+		float x = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 60 - 30;
+		float z = static_cast <float> (rand()) / static_cast <float> (RAND_MAX) * 0.5 - 25.25;
+
+		if(floor.getYAt(&y, x, z)) {
+			if((x < -25 || x > 25) || (z < -25 || z > 25)) {
+				MathVector v(x, 0, z);
+				fail.push_back(v);
+			}
+		}
+
+		else {
+			if(x < 25 && x > -25 && z < 25 && z > -25) {
+				MathVector v(x, 0, z);
+				fail.push_back(v);
+			}
+		}
+	}
+
+//	puts(floor.getYAt(&y, -25, -25.01) ? "inside\n" : "outside'");
+
+	for(unsigned int i = 0; i < fail.size(); ++i) {
+		printf("%5d x:%f z:%f\n", i, fail[i].x, fail[i].z);
+	}
+
+	return 0;
+	*/
 	glutTimerFunc(31.25, update, 0);
 
 	glutMainLoop();

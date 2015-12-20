@@ -2,6 +2,7 @@
 #include "globals.cpp"
 
 #define WALL_MARGIN 1
+#define JUMP_SPEED 2
 
 int Character::nextId = 0;
 
@@ -90,4 +91,11 @@ void Character::updatePlayerLocation() {
 		this->angleV += 360;
 
 	DrawableObject::updatePhysics();
+}
+
+void Character::jump() {
+	if(floor) {
+		floor = 0;
+		ySpeed = JUMP_SPEED;
+	}
 }
