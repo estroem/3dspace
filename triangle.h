@@ -14,6 +14,9 @@ public:
 	float getArea();
 	MathPlane getPlane();
 	bool lineCrosses(MathVector start, MathVector dir);
+	bool lineCrosses(MathVector *result, MathVector start, MathVector dir);
+	bool lineCrosses(MathVector *result, MathVector start, MathVector dir, bool eps);
+	bool intersection(MathVector *result, MathVector start, MathVector dir, bool eps = false);
 	bool isWithin(MathVector point);
 };
 

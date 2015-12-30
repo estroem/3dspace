@@ -32,6 +32,14 @@ MathVector MathVector::operator- (float t) {
 	return result;
 }
 
+MathVector MathVector::operator/ (float t) {
+	MathVector result;
+	result.x = this->x / t;
+	result.y = this->y / t;
+	result.z = this->z / t;
+	return result;
+}
+
 MathVector MathVector::operator* (MathVector v) { // Cross product
 	MathVector result;
 	result.x = this->y * v.z - this->z * v.y;
@@ -57,11 +65,15 @@ float MathVector::length() {
 }
 
 float MathVector::cosAngle(MathVector v) {
-	return (this->x * v.x + this->y * v.y + this->z * v.z) / (this->length() * v.length());
+	return (dotProduct(v)) / (this->length() * v.length());
 }
 
 void MathVector::setValues(float x, float y, float z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+void MathVector::print() {
+	printf("%f %f %f\n", x, y, z);
 }

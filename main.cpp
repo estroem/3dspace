@@ -16,6 +16,7 @@ Most of the initial code was written in late August/early September of 2012. -- 
 #include "mathvector.h"
 #include "mathplane.h"
 #include "triangle.h"
+#include "line.h"
 #include "point.h"
 #include "box.h"
 #include "wall.h"
@@ -141,6 +142,28 @@ void update(int value) {
 }
 
 int main(int argc, char** argv) {
+/*	Wall wall6(MathVector(10.0f, -5.0f, -10.0f), MathVector(10.0f, -5.0f, 0.0f), 10.0f);
+	walls.push_back(&wall6);
+	
+	MathVector start(8.999998, -5, -1.1), next(9.099998, -5, -1.1);
+
+	Deathlord *p = new Deathlord(8.999998, -5, -1.1);
+	p->height = 3;
+	p->radius = 1;
+	MathVector eye(0, 5, 0);
+	p->setEyePos(eye);
+	p->movingSpeed = 0.1;
+	
+	p->wallCollision(start, next);
+
+	return 0;
+	
+/*	Line l1(MathVector(-1, 0, -1), MathVector(1, 0, 1));
+	Line l2(MathVector(-1, 0, 1), MathVector(1, 0, -1));
+
+	puts(l1.intersects(l2) ? "true\n" : "false\n");
+
+	return 0;*/
 	//Initialize GLUT
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -161,6 +184,8 @@ int main(int argc, char** argv) {
 	player = new Deathlord;
 	player->pos.x = player->pos.z = 0;
 	player->pos.y = -5;
+	player->height = 3;
+	player->radius = 1;
 	MathVector eye(0, 5, 0);
 	player->setEyePos(eye);
 	player->movingSpeed = 0.1;
@@ -186,23 +211,28 @@ int main(int argc, char** argv) {
 	if(newtable.loadFromFile("newtable.dat"))
 		objects.push_back(&newtable);
 	
-	Wall wall(10.0f, -10.0f, 10.0f, 0.0f);
+	Wall wall(MathVector(10.0f, -5.0f, -10.0f), MathVector(10.0f, -5.0f, 0.0f), 10.0f);
 	wall.setColor(0.5, 0.5, 1);
 	walls.push_back(&wall);
 	
-	Wall left(-25.0f, -25.0f, -25.0f, 25.0f);
+	MathVector c1(-25.0f, -5.0f, -25.0f);
+	MathVector c2(-25.0f, -5.0f, 25.0f);
+	MathVector c3(25.0f, -5.0f, 25.0f);
+	MathVector c4(25.0f, -5.0f, -25.0f);
+
+	Wall left(c1, c2, 10.0f);
 	left.setColor(1, 1, 1);
 	walls.push_back(&left);
 	
-	Wall right(25.0f, -25.0f, 25.0f, 25.0f);
+	Wall right(c4, c3, 10.0f);
 	right.setColor(1, 1, 1);
 	walls.push_back(&right);
 	
-	Wall back(-25.0f, -25.0f, 25.0f, -25.0f);
+	Wall back(c4, c1, 10.0f);
 	back.setColor(0.5, 0.5, 0.5);
 	walls.push_back(&back);
 	
-	Wall front(-25.0f, 25.0f, 25.0f, 25.0f);
+	Wall front(c2, c3, 10.0f);
 	front.setColor(0.5, 0.5, 0.5);
 	walls.push_back(&front);
 

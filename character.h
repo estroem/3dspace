@@ -18,6 +18,8 @@ private:
 protected:
 	void updatePlayerLocation();
 public:
+	int findWallCollisionPoint(MathVector *result, MathVector start, MathVector dir);
+	MathVector wallCollision(MathVector pos, MathVector next);
 	int id;
 	float posX;
 	float posY;
@@ -28,8 +30,10 @@ public:
 	float movingSpeed;
 	bool goF, goB, goL, goR;
 	bool turnU, turnD, turnL, turnR;
+	float radius;
+	float height;
 
-	Character() : posX(0), posY(0), posZ(0), angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4) {
+	Character() : posX(0), posY(0), posZ(0), angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4), radius(1), height(0) {
 		pos.x = 0;
 		pos.y = 0;
 		pos.z = 0;
@@ -39,7 +43,7 @@ public:
 		this->id = Character::nextId++;
 	}
 
-	Character(float x, float y, float z) : angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4) {
+	Character(float x, float y, float z) : angleH(0), angleV(0), turningSpeed(4), movingSpeed(0.4), radius(1), height(0) {
 		pos.x = x;
 		pos.y = y;
 		pos.z = z;

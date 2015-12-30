@@ -17,6 +17,12 @@ public:
 	bool getYAt(float *y, float x, float z);
 	bool getZAt(float *z, float x, float y);
 	bool lineCrosses(MathVector start, MathVector dir);
+	bool lineCrosses(MathVector *result, MathVector start, MathVector dir);
+	bool lineCrosses(MathVector *result, MathVector start, MathVector dir, bool eps);
+	bool intersection(MathVector *result, MathVector start, MathVector dir, bool eps = true);
+	float cosAngle(MathVector v);
+	float angle(MathVector v);
+	MathVector lineBreakEnd(MathVector start, MathVector dir, bool eps = true);
 };
 
 #endif

@@ -22,8 +22,14 @@ MathVector DrawableObject::getLowestPoint() {
 }
 
 MathVector DrawableObject::getHighestPoint() {
-	MathVector p;
-	return p;
+	if(model.size() == 0) return MathVector(0, 0, 0);
+
+	unsigned int maxPointIndex = 0; // do this when loading model instead
+	for(unsigned int i = 1; i < model.size(); ++i) {
+		if(model[i].y > model[maxPointIndex].y) maxPointIndex = i;
+	}
+
+	return model[maxPointIndex];
 }
 
 // fix y position to snap to floor
@@ -56,42 +62,6 @@ bool DrawableObject::snapToFloor() {
 
 	return true;
 }
-/*
-void DrawableObject::updatePhysics() {
-	MathVector ySpeedVector(0, ySpeed, 0);
-
-	MathVector lowestPoint = getLowestPoint();
-
-	if(ySpeed == 0) { // maybe not compare floats like this?
-
-		unsigned int possibleFloor = 0;
-		float possibleFloorY = 0;
-		bool found = false;
-
-		for(unsigned int i = 0; i < floors.size(); ++i) {
-			float floorY;
-			if(floors[i]->getYAt(&floorY, pos.x, pos.z) &&
-					((floorY == lowestPoint.y) || (floorY - lowestPoint.y > 0 && fabs(floorY - lowestPoint.y) < STEP) || (floorY - lowestPoint.y >= -EPS))) {
-				if(!found || floorY > possibleFloorY) {
-					found = true;
-					possibleFloor = i;
-					possibleFloorY = floorY;
-				}
-			}
-		}
-	}
-
-	else if(ySpeed < 0) {
-		
-	}
-
-	else {
-	
-	}
-
-}
-
-*/
 
 // return absolute position of eyes
 MathVector DrawableObject::getAbsEyePos() {

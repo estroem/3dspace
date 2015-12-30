@@ -27,16 +27,41 @@ MathPlane Triangle::getPlane() {
 }
 
 bool Triangle::lineCrosses(MathVector start, MathVector dir) {
+	MathVector r;
+	return lineCrosses(&r, start, dir);
+}
+
+bool Triangle::lineCrosses(MathVector *result, MathVector start, MathVector dir) {
+	return lineCrosses(result, start, dir, false);
+}
+
+bool Triangle::lineCrosses(MathVector *result, MathVector start, MathVector dir, bool eps) {
 	MathPlane plane = getPlane();
 
 	if(dir.dotProduct(plane.normal) == 0) return false; // parallell
 
 	float multiplier = (plane.point - start).dotProduct(plane.normal) / dir.dotProduct(plane.normal);
-
+	
 	if(multiplier + EPS >= 0 && multiplier - EPS <= 1) {
 		if(isWithin(start + (dir * multiplier))) {
+			if(eps)	*result = start + (dir * multiplier) + (dir / dir.length()) * EPS;
+			else    *result = start + (dir * multiplier);
 			return true;
 		}
+	}
+
+	return false;
+}
+
+bool Triangle::intersection(MathVector *result, MathVector start, MathVector dir, bool eps) {	MathPlane plane = getPlane();
+	if(dir.dotProduct(plane.normal) == 0) return false; // parallell
+
+	float multiplier = (plane.point - start).dotProduct(plane.normal) / dir.dotProduct(plane.normal);
+	
+	if(isWithin(start + (dir * multiplier))) {
+		if(eps)	*result = start + (dir * multiplier) + (dir / dir.length()) * EPS;
+		else    *result = start + (dir * multiplier);
+		return true;
 	}
 
 	return false;
