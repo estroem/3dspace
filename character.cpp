@@ -8,16 +8,6 @@
 #define EPS 0.00001
 #define GRAVITY 0.001
 
-#define NOHIT 0
-#define LEFT 1
-#define RIGHT 2
-#define BACK 3 // towards the camera
-#define FORW 4 // away from the camera
-#define LB 5 // hitting both left and back 
-#define LF 6 // left forwards
-#define RB 7 // right back
-#define RF 8 // right forwards
-
 int Character::nextId = 0;
 
 int Character::findWallCollisionPoint(MathVector *result, MathVector start, MathVector dir) {
@@ -60,11 +50,6 @@ MathVector Character::wallCollision(MathVector start, MathVector next) {
 	int wallId = findWallCollisionPoint(&collisionPoint, start, dir);
 
 	if(wallId != -1) {
-
-		printf("pos "); start.print();
-		printf("dir "); dir.print();
-		printf("collisionpoint "); collisionPoint.print();
-
 		Wall ghostWall = *walls[wallId];
 
 		MathVector pointInPlane;
@@ -74,14 +59,8 @@ MathVector Character::wallCollision(MathVector start, MathVector next) {
 		ghostWall.start = ghostWall.start + translation;
 		ghostWall.end = ghostWall.end + translation;
 
-		//ghostWall.start.print();
-		//ghostWall.end.print();
-
 		MathVector breakEnd = ghostWall.getPlane().lineBreakEnd(start, dir, true);
 
-		printf("breakend "); breakEnd.print();
-		puts("k\n\n\n");
-		
 		int hittingWallId = -1;
 		MathVector hittingWallPoint;
 
