@@ -34,6 +34,11 @@ public:
 	const vector<Floor *>* getAllFloors();
 	const vector<Object *>* getAllObjects();
 	const vector<Character *>* getAllCharacters();
+
+	void addWall(Wall* wall);
+	void addFloor(Floor* floor);
+	void addObject(Object* object);
+	void addCharacter(Character* character);
 };
 
 #endif
